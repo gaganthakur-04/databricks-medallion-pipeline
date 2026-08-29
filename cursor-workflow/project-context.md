@@ -42,12 +42,13 @@ customers.csv + orders.csv + products.csv
 
 | Convention | Value |
 |------------|-------|
-| Layer folders | `bronze/`, `silver/`, `gold/`, `dashboard/` |
-| Documentation | `docs/` |
+| Pipeline code | `src/bronze/`, `src/silver/`, `src/gold/`, `src/dashboard/` |
+| Data generation | `src/data_generation/` |
+| Documentation | Root-level `.md` files (per assessment template) |
 | Cursor workflow | `cursor-workflow/` |
-| AI prompts | `ai-prompt-history/<activity>/` |
-| Generated CSVs | `data/sample/` (gitignored at scale if needed) |
-| Setup scripts | `setup/` |
+| AI prompts | `ai-prompts/*.md` |
+| Generated CSVs | `data/*.csv` (gitignored) |
+| Database setup | `database/` |
 | Tests | `tests/` |
 
 ## Technology Stack **(Assumption)**
@@ -77,15 +78,15 @@ Tables:
   gold.sales_by_product, gold.revenue_by_customer, gold.customer_segmentation
 ```
 
-Catalog name to be set in `setup/` and `docs/candidate-info.md`.
+Catalog name to be set in `database/` and `candidate-info.md`.
 
-## Silver Quality Flag Schema **(Assumption)**
+## Silver Quality Flag Schema
+
+Per assessment spec:
 
 ```text
-is_valid          BOOLEAN
-quality_flags     ARRAY<STRING>   -- rule IDs, e.g. ORD_REF_001
-quality_reasons   ARRAY<STRING>   -- human-readable
-_silver_processed_at TIMESTAMP
+quality_check_result  STRING   -- failed check(s) and reasons; PASS if valid
+_silver_processed_at  TIMESTAMP
 ```
 
 ## Gold Inclusion Policy **(Assumption)**
@@ -97,9 +98,9 @@ Gold aggregates use `is_valid = true` Silver records only. Invalid records remai
 | Document | When to consult |
 |----------|-----------------|
 | `cursor-workflow/spec.md` | Technical implementation details |
-| `docs/requirements-analysis.md` | What the assessment requires |
-| `docs/data-model.md` | Schemas and relationships |
-| `docs/data-quality-strategy.md` | DQ rules and flagging |
+| `requirements-analysis.md` | What the assessment requires |
+| `data-model.md` | Schemas and relationships |
+| `data-quality-strategy.md` | DQ rules and flagging |
 | `cursor-workflow/task-breakdown.md` | What to build next |
 
 ## What NOT to Do
@@ -112,6 +113,6 @@ Gold aggregates use `is_valid = true` Silver records only. Invalid records remai
 
 ## Current Project State
 
-**Phase:** Documentation and structure established. No pipeline code or sample data yet.
+**Phase:** Repository aligned to assessment template. Data generator ready; pipeline placeholders in `src/`.
 
 See `README.md` status table for latest progress.

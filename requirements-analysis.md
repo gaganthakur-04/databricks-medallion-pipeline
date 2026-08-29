@@ -109,7 +109,7 @@ Three required outputs:
 2. **Revenue by Customer**
 3. **Customer Segmentation**
 
-Specific column definitions and grain are **not specified** in the assessment. **(Assumption)** Gold tables will be defined in `docs/data-model.md` and `cursor-workflow/spec.md` based on reasonable e-commerce analytics conventions.
+Specific column definitions and grain are **not specified** in the assessment. **(Assumption)** Gold tables will be defined in `data-model.md` and `cursor-workflow/spec.md` based on reasonable e-commerce analytics conventions.
 
 ### 2.6 Dashboard Requirements
 
@@ -142,14 +142,15 @@ Required documentation files:
 | File | Purpose |
 |------|---------|
 | `README.md` | Project overview |
-| `docs/candidate-info.md` | Candidate and environment details |
-| `docs/requirements-analysis.md` | This document |
-| `docs/design-notes.md` | Architecture and design decisions |
-| `docs/data-model.md` | Schemas across all layers |
-| `docs/data-quality-strategy.md` | DQ rules and flagging approach |
-| `docs/debugging-notes.md` | Issues encountered and resolutions |
-| `docs/reflection.md` | Post-project reflection |
-| `docs/final-ai-usage-summary.md` | Summary of AI tool usage |
+| `candidate-info.md` | Candidate and environment details |
+| `requirements-analysis.md` | This document |
+| `design-notes.md` | Architecture and design decisions |
+| `data-model.md` | Schemas across all layers |
+| `data-quality-strategy.md` | DQ rules and flagging approach |
+| `debugging-notes.md` | Issues encountered and resolutions |
+| `reflection.md` | Post-project reflection |
+| `final-ai-usage-summary.md` | Summary of AI tool usage |
+| `tool-workflow.md` | Part A: AI workflow foundation |
 
 Cursor workflow files:
 
@@ -188,7 +189,7 @@ The assessment does **not** require:
 
 ## 5. Open Questions / Ambiguities
 
-See [Section 6 in cursor-workflow/spec.md](../cursor-workflow/spec.md#6-open-questions) for technical ambiguities tracked during design.
+See [Section 9 in cursor-workflow/spec.md](cursor-workflow/spec.md#9-open-questions) for technical ambiguities tracked during design.
 
 | # | Question | Impact |
 |---|----------|--------|
@@ -204,14 +205,14 @@ See [Section 6 in cursor-workflow/spec.md](../cursor-workflow/spec.md#6-open-que
 
 | Requirement | Artifact | Status |
 |-------------|----------|--------|
-| 10K customers with DQ issues | `data-generation/`, `silver/` | Not started |
-| 100K orders with DQ issues | `data-generation/`, `silver/` | Not started |
-| 500 products | `data-generation/` | Not started |
-| Bronze ingestion | `bronze/` | Not started |
-| Silver DQ flagging (4 areas) | `silver/`, `docs/data-quality-strategy.md` | Not started |
-| Gold: Sales by Product | `gold/` | Not started |
-| Gold: Revenue by Customer | `gold/` | Not started |
-| Gold: Customer Segmentation | `gold/` | Not started |
-| Dashboard (3 viz minimum) | `dashboard/` | Not started |
-| AI lifecycle artifacts | `ai-prompt-history/`, `docs/` | Structure created |
-| Tests | `tests/` | Not started |
+| 10K customers with DQ issues | `src/data_generation/`, `src/silver/` | Generator ready |
+| 100K orders with DQ issues | `src/data_generation/`, `src/silver/` | Generator ready |
+| 500 products | `src/data_generation/` | Generator ready |
+| Bronze ingestion | `src/bronze/` | Placeholders |
+| Silver DQ flagging (4 areas) | `src/silver/`, `data-quality-strategy.md` | Placeholders |
+| Gold: Sales by Product | `src/gold/` | Placeholders |
+| Gold: Revenue by Customer | `src/gold/` | Placeholders |
+| Gold: Customer Segmentation | `src/gold/` | Placeholders |
+| Dashboard (3 viz minimum) | `src/dashboard/` | Placeholders |
+| AI lifecycle artifacts | `ai-prompts/`, root docs | Structure created |
+| Tests | `tests/` | Data generation tests |

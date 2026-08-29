@@ -1,18 +1,18 @@
 # Tests
 
-Automated tests for data generation, pipeline layers, and data quality validation.
+```bash
+pip install -r requirements.txt
+pytest tests/ -v
+```
 
-## Planned Structure
+## Structure
 
 ```
 tests/
-├── data_generation/   # Row counts, issue counts, schema
-├── bronze/            # Ingestion verification
-├── silver/            # Rule logic and flag counts
-├── gold/              # Aggregation correctness
-└── integration/       # End-to-end pipeline
+├── data_generation/   # Row counts, DQ issue counts, schemas
+├── silver/            # (planned) Rule logic and flag counts
+├── gold/              # (planned) Aggregation correctness
+└── integration/       # (planned) End-to-end pipeline
 ```
 
-## Status
-
-Not started. See `cursor-workflow/task-breakdown.md` Phase 7.
+See [test-strategy.md](../test-strategy.md).

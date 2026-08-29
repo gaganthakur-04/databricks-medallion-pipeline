@@ -21,4 +21,4 @@ Capture architecture decisions, trade-offs, and rationale as the pipeline is bui
 
 | Date | Decision | Rationale | Alternatives considered |
 |------|----------|-----------|------------------------|
-| — | — | — | — |
+| 2026-08-29 | Repository structure aligned to assessment template | Required for submission compliance | Prior flat layer folders at root |

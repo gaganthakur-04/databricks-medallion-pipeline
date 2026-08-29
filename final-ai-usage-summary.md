@@ -35,4 +35,4 @@
 
 ## Prompt history reference
 
-Detailed prompts are archived under `ai-prompt-history/` organized by activity.
+Detailed prompts are archived under `ai-prompts/` by activity.

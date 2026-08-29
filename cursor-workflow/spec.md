@@ -20,12 +20,12 @@ flowchart LR
 
 | Component | Location | Technology |
 |-----------|----------|------------|
-| Data generator | `data-generation/` | Python **(Assumption)** |
-| Bronze ingest | `bronze/` | PySpark / Delta **(Assumption)** |
-| Silver validation | `silver/` | PySpark / Delta **(Assumption)** |
-| Gold transforms | `gold/` | PySpark / Delta **(Assumption)** |
-| Dashboard queries | `dashboard/` | Databricks SQL |
-| Setup | `setup/` | SQL DDL + optional Python |
+| Data generator | `src/data_generation/` | Python |
+| Bronze ingest | `src/bronze/` | PySpark / Delta |
+| Silver validation | `src/silver/` | PySpark / Delta |
+| Gold transforms | `src/gold/` | PySpark / Delta + SQL |
+| Dashboard queries | `src/dashboard/` | Databricks SQL |
+| Setup | `database/` | SQL DDL |
 | Tests | `tests/` | pytest **(Assumption)** |
 
 ---
@@ -42,11 +42,11 @@ flowchart LR
 
 ### 2.2 Schemas
 
-Defined in `docs/data-model.md` and `docs/requirements-analysis.md`.
+Defined in `data-model.md` and `requirements-analysis.md`.
 
 ### 2.3 Intentional DQ Injection
 
-The data generator (`data-generation/`) must produce exactly:
+The data generator (`src/data_generation/`) must produce exactly:
 
 | File | Issue | Count |
 |------|-------|-------|
@@ -66,7 +66,7 @@ All other rows should be valid. Products have no intentional issues.
 
 ### 3.1 Responsibilities
 
-- Read CSV files from `data/sample/` (local) or cloud path **(Assumption)**
+- Read CSV files from `data/` (local) or DBFS/S3 cloud path
 - Write to Delta tables with source schema preserved
 - Add audit columns: `_ingested_at`, `_source_file`, `_batch_id` **(Assumption)**
 - No validation, deduplication, or type coercion beyond Spark CSV inference
@@ -89,12 +89,12 @@ Full reload per run (overwrite) for assessment simplicity. Incremental/autoloade
 
 - Read from Bronze
 - Apply DQ rules across four areas
-- Add `is_valid`, `quality_flags`, `quality_reasons`, `_silver_processed_at`
+- Add `quality_check_result`, `_silver_processed_at`
 - **Retain all records** — no silent deletion
 
 ### 4.2 Rule Catalog
 
-See `docs/data-quality-strategy.md` and `docs/data-model.md`.
+See `data-quality-strategy.md` and `data-model.md`.
 
 ### 4.3 Tables
 
@@ -120,7 +120,7 @@ See `docs/data-quality-strategy.md` and `docs/data-model.md`.
 
 ### 5.1 Responsibilities
 
-- Read from valid Silver records (`is_valid = true`) **(Assumption)**
+- Read from valid Silver records (`quality_check_result = 'PASS'`) **(Assumption)**
 - Join across entities as needed
 - Produce three analytics tables
 
@@ -128,15 +128,15 @@ See `docs/data-quality-strategy.md` and `docs/data-model.md`.
 
 #### gold.sales_by_product
 
-Product-level sales metrics. See `docs/data-model.md`.
+Product-level sales metrics. See `data-model.md`.
 
 #### gold.revenue_by_customer
 
-Customer-level revenue metrics. See `docs/data-model.md`.
+Customer-level revenue metrics. See `data-model.md`.
 
 #### gold.customer_segmentation
 
-Segment-level rollups: Premium, Standard, Basic.
+Behavioral segments: High-Value, Repeat, One-Time, Inactive.
 
 ### 5.3 Business Rules **(Assumption)**
 
@@ -162,7 +162,7 @@ Databricks SQL Dashboard **(stated)**.
 
 ### 6.3 Query Location
 
-SQL files in `dashboard/` with one file per visualization **(Assumption)**.
+SQL in `src/dashboard/dashboard_queries.sql` and per-table files in `src/gold/`.
 
 ---
 
@@ -183,22 +183,21 @@ pytest **(Assumption)**. PySpark local session or test doubles for unit tests.
 
 ### 7.3 Validation Targets
 
-Silver flag counts must match intentional issue counts (see `docs/data-quality-strategy.md`).
+Silver flag counts must match intentional issue counts (see `data-quality-strategy.md`).
 
 ---
 
 ## 8. Setup & Deployment
 
-### 8.1 Setup Scripts (`setup/`)
+### 8.1 Setup Scripts (`database/`)
 
-- Create catalog/schema **(Assumption: Unity Catalog)**
-- Grant permissions **(Assumption: workspace default)**
-- Optional: volume/path for CSV landing zone
+- `database/schema.sql` — catalog, schemas, Delta tables
+- `database/setup-notes.md`, `database/seed-data-notes.md`
 
 ### 8.2 Execution Order
 
-1. Run `setup/` scripts
-2. Generate CSVs → `data/sample/`
+1. Run `database/schema.sql` in Databricks
+2. Generate CSVs → `data/`
 3. Bronze ingest
 4. Silver validation
 5. Gold transforms

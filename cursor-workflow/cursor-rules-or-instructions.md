@@ -12,7 +12,7 @@ This is an **AI-first data engineering assessment**. Every significant AI intera
 
 1. Read `cursor-workflow/project-context.md` and `cursor-workflow/spec.md`
 2. Check `cursor-workflow/task-breakdown.md` for the current phase
-3. Consult `docs/data-model.md` and `docs/data-quality-strategy.md` for schemas and rules
+3. Consult `data-model.md` and `data-quality-strategy.md` for schemas and rules
 4. Do not invent requirements — mark assumptions explicitly
 5. Do not skip ahead to later phases unless the user requests it
 
@@ -29,7 +29,7 @@ This is an **AI-first data engineering assessment**. Every significant AI intera
 
 ### Data Quality
 
-- Use rule IDs from `docs/data-quality-strategy.md` (e.g., `ORD_REF_001`)
+- Use `quality_check_result` column per assessment spec
 - Flag NULL FKs under **Completeness**, not referential integrity
 - A record may have multiple flags
 - Intentional issue counts are acceptance criteria — verify with tests
@@ -48,40 +48,41 @@ This is an **AI-first data engineering assessment**. Every significant AI intera
 - No hardcoded credentials, tokens, or workspace URLs with secrets
 - Do not add dependencies without justification
 
-## 5. File Organization
+## 5. File Organization (Assessment Template)
 
 | What | Where |
 |------|-------|
-| Generator scripts | `data-generation/` |
-| Bronze code | `bronze/` |
-| Silver code + rules | `silver/` |
-| Gold transforms | `gold/` |
-| Dashboard SQL | `dashboard/` |
-| Tests | `tests/` mirroring layer structure |
-| Setup DDL | `setup/` |
-| Generated CSVs | `data/sample/` |
-| Assessment docs | `docs/` |
+| Data generator | `src/data_generation/` |
+| Bronze code | `src/bronze/` |
+| Silver code + rules | `src/silver/` |
+| Gold transforms | `src/gold/` |
+| Dashboard SQL | `src/dashboard/` |
+| Tests | `tests/` |
+| Setup DDL | `database/` |
+| Generated CSVs | `data/` |
+| Assessment docs | Root-level `.md` files |
+| AI prompts | `ai-prompts/` |
 | Cursor context | `cursor-workflow/` |
 
 ## 6. Documentation Obligations
 
-Update docs when making design decisions:
-
 | Event | Update |
 |-------|--------|
-| Architecture choice | `docs/design-notes.md` |
-| Schema change | `docs/data-model.md` |
-| New DQ rule | `docs/data-quality-strategy.md` |
-| Bug found and fixed | `docs/debugging-notes.md` |
+| Architecture choice | `design-notes.md` |
+| Schema change | `data-model.md` |
+| New DQ rule | `data-quality-strategy.md` |
+| Bug found and fixed | `debugging-notes.md` |
 | Phase completed | `README.md` status table |
 
 ## 7. AI Prompt History
 
-After significant AI-assisted work in a phase:
+After significant AI-assisted work, append to the relevant `ai-prompts/<activity>.md` file:
 
-1. Save the prompt (and optionally the key response) to `ai-prompt-history/<activity>/`
-2. Use filename format: `YYYY-MM-DD-short-description.md`
-3. Activities: `requirements`, `data-generation`, `bronze`, `silver`, `gold`, `dashboard`, `testing`, `debugging`, `documentation`
+- Prompt text (or summary)
+- AI response summary
+- What you accepted, changed, or rejected (and why)
+
+Files: `data-generation.md`, `bronze-layer.md`, `silver-layer.md`, `gold-layer.md`, `dashboard.md`, `debugging.md`, `documentation.md`
 
 ## 8. Testing Requirements
 
@@ -98,26 +99,17 @@ After significant AI-assisted work in a phase:
 - Never commit secrets or large generated data without `.gitignore`
 - Use clear commit messages focused on "why"
 
-## 10. Interaction Style
-
-- Inspect the repo before making changes
-- Propose structure/decisions before large changes when asked
-- Explain what changed, why, and which files were modified
-- Flag ambiguities rather than guessing silently
-- Run commands and tests yourself — do not just suggest them
-
-## 11. Common Pitfalls to Avoid
+## 10. Common Pitfalls to Avoid
 
 1. **Dropping bad rows in Silver** — the most critical assessment requirement
 2. **Wrong DQ issue counts** — generator must seed exactly the specified counts
-3. **Inventing Gold schemas** without documenting assumptions
+3. **Wrong Gold segmentation** — use behavioral segments (High-Value/Repeat/One-Time/Inactive), not source `customer_segment`
 4. **Skipping prompt history** — undermines the AI-first assessment goal
-5. **Mixing layers** — keep Bronze/Silver/Gold responsibilities separate
-6. **Dashboard querying Silver/Bronze** — use Gold tables
+5. **Dashboard querying Silver/Bronze** — use Gold tables
 
-## 12. When Stuck
+## 11. When Stuck
 
-1. Re-read `docs/requirements-analysis.md` for stated vs assumed requirements
+1. Re-read `requirements-analysis.md` for stated vs assumed requirements
 2. Check open questions in `cursor-workflow/spec.md` §9
-3. Log the issue in `docs/debugging-notes.md`
+3. Log the issue in `debugging-notes.md`
 4. Ask the user to resolve ambiguities that affect correctness

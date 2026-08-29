@@ -20,7 +20,7 @@ SHOW TABLES IN ecommerce_dev.gold;
 
 ## Catalog Naming
 
-Default catalog: `ecommerce_dev`. Update `docs/candidate-info.md` if using a different name, then find-replace in pipeline code.
+Default catalog: `ecommerce_dev`. Update `candidate-info.md` if using a different name, then find-replace in pipeline code.
 
 ## CSV Landing Zone
 

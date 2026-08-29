@@ -27,4 +27,4 @@
 - [ ] Databricks SQL Dashboard deployed with required visualizations
 - [ ] Tests pass
 - [ ] Documentation complete (design, DQ strategy, reflection, AI usage summary)
-- [ ] AI prompt history captured under `ai-prompt-history/`
+- [ ] AI prompt history captured under `ai-prompts/`

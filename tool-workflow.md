@@ -45,7 +45,7 @@ Before each implementation session, context files are referenced so the AI assis
 2. **Run tests** — every module has pytest coverage for core behaviour
 3. **Verify counts** — intentional DQ issue counts must match assessment exactly
 4. **Reject mismatches** — e.g. wrong Gold segmentation dimension, silent row deletion in Silver
-5. **Iterate** — refine prompts when output doesn't match spec; document in `ai-prompt-history/`
+5. **Iterate** — refine prompts when output doesn't match spec; document in `ai-prompts/`
 
 ## Reuse in Production
 
