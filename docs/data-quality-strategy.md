@@ -2,85 +2,90 @@
 
 ## Principles
 
-1. **Detect, don't delete** — Silver retains all records; invalid rows are flagged, not silently removed.
-2. **Explicit over implicit** — Every failure maps to a rule ID, quality area, and human-readable reason.
-3. **Traceable** — Rule IDs link back to assessment requirements and test cases.
-4. **Measurable** — DQ summary metrics can be queried per load batch.
+1. **Detect, don't delete** — Silver retains all records; invalid rows are flagged via `quality_check_result`.
+2. **Four quality checks** — Completeness, Uniqueness, Referential integrity, Type/business validation.
+3. **Measurable** — Quality metrics report shows % passed per check.
+4. **Traceable** — Failed checks documented with clear reasons.
 
-## Quality Areas
+## Quality Checks Overview
 
-| Area | Definition | Applies to |
-|------|------------|------------|
-| Completeness | Required fields are present (not NULL) | customers, orders |
-| Uniqueness | Primary key values are unique | customers, orders, products |
-| Referential integrity | Foreign keys resolve to existing parent records | orders → customers, orders → products |
-| Type/business validation | Values conform to domain rules and enums | all entities |
+### 1. Completeness
 
-## Silver Flagging Approach
+- **What:** No NULLs in critical fields
+- **How:** COUNT NULL values in `email`, `customer_id`, `product_id`
+- **Threshold:** >99% complete
+- **Result:** Flag rows with NULLs
 
-### Record-level metadata
+| Field | Entity |
+|-------|--------|
+| `email` | customers |
+| `customer_id` | orders |
+| `product_id` | orders |
 
-Each Silver record carries:
+### 2. Uniqueness
 
-- `is_valid` — `false` if **any** rule fails
-- `quality_flags` — machine-readable rule IDs (e.g., `ORD_REF_001`)
-- `quality_reasons` — human-readable descriptions
+- **What:** No duplicate primary keys
+- **How:** Detect duplicate `customer_id`, `order_id`
+- **Threshold:** 100% unique
+- **Result:** Flag duplicate rows
 
-### Handling duplicates
+### 3. Referential Integrity
 
-**(Assumption)** Duplicate primary key records are **all retained** with `CUST_UNIQ_001` / `ORD_UNIQ_001` flags. Gold layer excludes flagged duplicates. Alternative: mark only subsequent occurrences — to be decided during implementation.
+- **What:** Foreign keys exist in parent tables
+- **How:** `customer_id` in customers; `product_id` in products
+- **Threshold:** >99.9% valid
+- **Result:** Flag orphan records
 
-### Referential integrity scope
+NULL foreign keys are flagged under **Completeness**, not referential integrity.
 
-For orphan foreign keys (`ORD_REF_001`, `ORD_REF_002`):
+### 4. Type/Business Validation
 
-- Check against the set of **valid** parent `customer_id` / `product_id` values
-- **(Assumption)** "Valid" parent = distinct IDs from Silver parents where the parent itself passes uniqueness checks
+- **What:** Values conform to domain rules
+- **How:** Enum checks, numeric constraints, `total_amount` = `quantity × unit_price`
+- **Result:** Flag invalid rows
 
-### NULL foreign keys
+## Silver Flagging
 
-NULL `customer_id` and `product_id` are flagged under **Completeness** (`ORD_COMP_001`, `ORD_COMP_002`), not referential integrity, since NULL cannot reference a parent.
+Assessment requires `quality_check_result` column on Silver tables. Format **(Assumption):**
 
-## Rule Catalog
-
-See [data-model.md](data-model.md#silver-layer) for the full rule catalog with IDs.
-
-## Expected Issue Counts (Validation Targets)
-
-After Silver processing of intentionally seeded data:
-
-| Entity | Rule | Expected flagged records |
-|--------|------|--------------------------|
-| customers | `CUST_COMP_001` | 50 |
-| customers | `CUST_UNIQ_001` | 10 (duplicate rows; exact flagged count depends on duplicate-handling approach) |
-| orders | `ORD_COMP_001` | 100 |
-| orders | `ORD_COMP_002` | 200 |
-| orders | `ORD_REF_001` | 50 |
-| orders | `ORD_REF_002` | 30 |
-| orders | `ORD_UNIQ_001` | 20 (duplicate rows) |
-
-> **Note:** A single order row may trigger multiple flags (e.g., NULL `customer_id` AND NULL `product_id`). Total flagged rows may exceed individual issue counts.
-
-## DQ Monitoring Queries (planned)
-
-**(Assumption)** Summary views or queries:
-
-```sql
--- Example: flag counts by rule (to be implemented)
-SELECT quality_flag, COUNT(*) AS record_count
-FROM silver.orders
-LATERAL VIEW EXPLODE(quality_flags) f AS quality_flag
-GROUP BY quality_flag;
+```
+PASS
+FAIL: completeness — email is NULL
+FAIL: uniqueness — duplicate customer_id; referential_integrity — customer_id not found
 ```
 
-## Gold Layer Inclusion Policy
+## Quality Metrics Report
 
-**(Assumption)** Gold aggregates use only `is_valid = true` records. Invalid records remain queryable in Silver for audit and debugging.
+Required deliverable: % passed for each check per load.
 
-## Testing Strategy for DQ
+```sql
+-- Planned: silver quality summary view
+SELECT
+  check_name,
+  total_rows,
+  passed_rows,
+  ROUND(100.0 * passed_rows / total_rows, 2) AS pct_passed
+FROM silver.quality_metrics;
+```
 
-| Test type | Scope |
-|-----------|-------|
-| Unit tests | Individual rule functions with known good/bad inputs |
-| Integration tests | End-to-end: generated CSVs → Silver → verify flag counts |
-| Regression tests | Ensure flag counts match expected intentional issue counts |
+## Expected Issue Counts
+
+| Entity | Check | Expected flagged rows |
+|--------|-------|-------------------------|
+| customers | Completeness (NULL email) | 50 |
+| customers | Uniqueness (duplicate PK) | 10 |
+| orders | Completeness (NULL customer_id) | 100 |
+| orders | Completeness (NULL product_id) | 200 |
+| orders | Referential integrity (orphan customer_id) | 50 |
+| orders | Referential integrity (orphan product_id) | 30 |
+| orders | Uniqueness (duplicate PK) | 20 |
+
+> Rows may have multiple failures. Total unique flagged rows can exceed individual counts.
+
+## Gold Inclusion Policy
+
+**(Assumption)** Gold aggregates use Silver rows where `quality_check_result = 'PASS'` (or equivalent).
+
+## Testing
+
+See [test-strategy.md](test-strategy.md).

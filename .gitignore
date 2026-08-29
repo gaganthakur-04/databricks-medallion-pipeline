@@ -8,6 +8,7 @@ venv/
 .env.*
 
 # Generated data (large files)
+data/*.csv
 data/sample/*.csv
 
 # Databricks
