@@ -1,35 +1,56 @@
 # Database Setup Notes
 
-## Prerequisites
+## Databricks Community Edition (recommended for this assessment)
 
-- Databricks workspace (Community Edition or other)
-- SQL warehouse or cluster with Unity Catalog enabled **(Assumption)**
+Community Edition uses the **Hive metastore** (`CREATE DATABASE`), not Unity Catalog.
 
-## Execution
+1. Upload generated CSVs to DBFS (Databricks UI → **Data** → **Upload**):
+
+   ```
+   /FileStore/ecommerce/raw/customers.csv
+   /FileStore/ecommerce/raw/orders.csv
+   /FileStore/ecommerce/raw/products.csv
+   ```
+
+2. Open a notebook and run `database/schema_community_edition.sql` (copy/paste or `%run` if synced to workspace).
+
+3. Verify:
+
+   ```sql
+   SHOW DATABASES;
+   SHOW TABLES IN bronze;
+   SHOW TABLES IN silver;
+   SHOW TABLES IN gold;
+   ```
+
+4. Run Bronze ingestion (`src/bronze/ingest_all.py`) — see `src/bronze/README.md`.
+
+Default Bronze CSV path on Databricks: `dbfs:/FileStore/ecommerce/raw`
+
+---
+
+## Unity Catalog workspaces (optional / enterprise)
+
+If your workspace has Unity Catalog enabled:
 
 1. Open `database/schema.sql` in a Databricks SQL editor or notebook
 2. Run the full script to create catalog, schemas, and empty Delta tables
 3. Verify:
 
-```sql
-SHOW SCHEMAS IN ecommerce_dev;
-SHOW TABLES IN ecommerce_dev.bronze;
-SHOW TABLES IN ecommerce_dev.silver;
-SHOW TABLES IN ecommerce_dev.gold;
-```
+   ```sql
+   SHOW SCHEMAS IN ecommerce_dev;
+   SHOW TABLES IN ecommerce_dev.bronze;
+   ```
 
-## Catalog Naming
-
-Default catalog: `ecommerce_dev`. Update `candidate-info.md` if using a different name, then find-replace in pipeline code.
+Update catalog name in `candidate-info.md` if not using `ecommerce_dev`.
 
 ## CSV Landing Zone
 
-**(Assumption)** Upload generated CSVs from `data/` to DBFS or a volume:
+Upload generated CSVs from local `data/` to the workspace landing zone:
 
-```
-/dbfs/FileStore/ecommerce/raw/customers.csv
-/dbfs/FileStore/ecommerce/raw/orders.csv
-/dbfs/FileStore/ecommerce/raw/products.csv
-```
+| Environment | Path |
+|-------------|------|
+| Community Edition | `dbfs:/FileStore/ecommerce/raw/` |
+| Local dev / tests | `<repo>/data/` |
 
-Bronze ingestion scripts will reference these paths (configured in Phase 3).
+Bronze ingestion paths are configurable via `--input-dir` (see `src/bronze/README.md`).
