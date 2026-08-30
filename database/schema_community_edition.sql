@@ -1,28 +1,17 @@
--- Databricks Medallion Pipeline — Catalog & Schema Setup
--- Run in Databricks SQL or a notebook: %sql
--- Assumption: catalog name `ecommerce_dev` (override via candidate-info.md)
---
--- NOTE: Databricks Community Edition does not support Unity Catalog.
---       Use database/schema_community_edition.sql instead (Hive metastore).
+-- Databricks Community Edition — Database & Table Setup
+-- Uses Hive metastore databases (no Unity Catalog).
+-- Run in a Databricks notebook: %sql ... or spark.sql(...)
 
 -- =============================================================================
--- Catalog
+-- Databases (Medallion layers)
 -- =============================================================================
-CREATE CATALOG IF NOT EXISTS ecommerce_dev
-COMMENT 'E-commerce medallion pipeline (assessment)';
-
-USE CATALOG ecommerce_dev;
-
--- =============================================================================
--- Schemas (Medallion layers)
--- =============================================================================
-CREATE SCHEMA IF NOT EXISTS bronze
+CREATE DATABASE IF NOT EXISTS bronze
 COMMENT 'Raw ingested CSV data — no transformations';
 
-CREATE SCHEMA IF NOT EXISTS silver
+CREATE DATABASE IF NOT EXISTS silver
 COMMENT 'Validated data with quality_check_result flags';
 
-CREATE SCHEMA IF NOT EXISTS gold
+CREATE DATABASE IF NOT EXISTS gold
 COMMENT 'Business analytics aggregations';
 
 -- =============================================================================
@@ -73,7 +62,7 @@ CREATE TABLE IF NOT EXISTS bronze.products (
 COMMENT 'Raw products CSV ingest';
 
 -- =============================================================================
--- Silver tables (Delta) — quality_check_result per assessment spec
+-- Silver tables (Delta) — created now for pipeline consistency; populated in Silver phase
 -- =============================================================================
 CREATE TABLE IF NOT EXISTS silver.customers (
     customer_id          INT,
@@ -85,8 +74,7 @@ CREATE TABLE IF NOT EXISTS silver.customers (
     lifetime_value       DECIMAL(12, 2),
     quality_check_result STRING,
     _silver_processed_at TIMESTAMP
-) USING DELTA
-COMMENT 'Validated customers with DQ flags';
+) USING DELTA;
 
 CREATE TABLE IF NOT EXISTS silver.orders (
     order_id             INT,
@@ -100,8 +88,7 @@ CREATE TABLE IF NOT EXISTS silver.orders (
     payment_date         DATE,
     quality_check_result STRING,
     _silver_processed_at TIMESTAMP
-) USING DELTA
-COMMENT 'Validated orders with DQ flags';
+) USING DELTA;
 
 CREATE TABLE IF NOT EXISTS silver.products (
     product_id           INT,
@@ -113,11 +100,10 @@ CREATE TABLE IF NOT EXISTS silver.products (
     reorder_level        INT,
     quality_check_result STRING,
     _silver_processed_at TIMESTAMP
-) USING DELTA
-COMMENT 'Validated products with DQ flags';
+) USING DELTA;
 
 -- =============================================================================
--- Gold tables (Delta)
+-- Gold tables (Delta) — populated in Gold phase
 -- =============================================================================
 CREATE TABLE IF NOT EXISTS gold.sales_by_product (
     product_id       INT,
@@ -126,8 +112,7 @@ CREATE TABLE IF NOT EXISTS gold.sales_by_product (
     total_orders     BIGINT,
     total_revenue    DECIMAL(18, 2),
     avg_order_value  DECIMAL(18, 2)
-) USING DELTA
-COMMENT 'Product-level sales aggregation';
+) USING DELTA;
 
 CREATE TABLE IF NOT EXISTS gold.revenue_by_customer (
     customer_id            INT,
@@ -137,13 +122,11 @@ CREATE TABLE IF NOT EXISTS gold.revenue_by_customer (
     total_revenue          DECIMAL(18, 2),
     avg_order_value        DECIMAL(18, 2),
     lifetime_value_actual  DECIMAL(18, 2)
-) USING DELTA
-COMMENT 'Customer-level revenue aggregation';
+) USING DELTA;
 
 CREATE TABLE IF NOT EXISTS gold.customer_segmentation (
     segment_type   STRING,
     customer_count BIGINT,
     avg_revenue    DECIMAL(18, 2),
     total_revenue  DECIMAL(18, 2)
-) USING DELTA
-COMMENT 'Behavioral customer segments: High-Value/Repeat/One-Time/Inactive';
+) USING DELTA;
