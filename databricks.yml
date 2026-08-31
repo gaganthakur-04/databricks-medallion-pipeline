@@ -1,0 +1,59 @@
+# Databricks Asset Bundle — Medallion Pipeline
+# Docs: https://docs.databricks.com/dev-tools/bundles/
+
+bundle:
+  name: medallion-pipeline
+
+include:
+  - resources/*.yml
+
+artifacts:
+  medallion_whl:
+    type: whl
+    build: pip wheel . --wheel-dir dist
+
+variables:
+  csv_input_dir:
+    description: DBFS path to source CSV files for Bronze ingestion.
+    default: dbfs:/FileStore/ecommerce/raw
+  bronze_database:
+    description: Hive database for Bronze tables.
+    default: bronze
+  silver_database:
+    description: Hive database for Silver tables.
+    default: silver
+  gold_database:
+    description: Hive database for Gold tables.
+    default: gold
+  spark_version:
+    description: Databricks runtime version for the job cluster.
+    default: "15.4.x-scala2.12"
+  node_type_id:
+    description: Worker node type (override for Community Edition or cloud provider).
+    default: i3.xlarge
+
+targets:
+  dev:
+    mode: development
+    default: true
+    variables:
+      csv_input_dir: dbfs:/FileStore/ecommerce/raw
+
+  prod:
+    mode: production
+    variables:
+      csv_input_dir: dbfs:/FileStore/ecommerce/raw
+
+sync:
+  include:
+    - "src/**"
+    - "database/**"
+    - "scripts/**"
+  exclude:
+    - "**/__pycache__"
+    - "**/.pytest_cache"
+    - "**/*.pyc"
+    - "data/**"
+    - ".venv/**"
+    - "tests/**"
+    - ".git/**"

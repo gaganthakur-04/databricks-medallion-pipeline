@@ -1,0 +1,49 @@
+resources:
+  jobs:
+    medallion_pipeline:
+      name: "[${bundle.target}] medallion-pipeline"
+      description: >
+        End-to-end Medallion pipeline: Bronze CSV ingest → Silver DQ validation → Gold analytics.
+      tags:
+        project: medallion-pipeline
+        layer: end-to-end
+
+      job_clusters:
+        - job_cluster_key: medallion_cluster
+          new_cluster:
+            spark_version: ${var.spark_version}
+            node_type_id: ${var.node_type_id}
+            num_workers: 0
+            spark_conf:
+              spark.databricks.delta.preview.enabled: "true"
+              spark.databricks.cluster.profile: singleNode
+              spark.master: "local[*]"
+            custom_tags:
+              ResourceClass: SingleNode
+            data_security_mode: SINGLE_USER
+
+      tasks:
+        - task_key: setup_schema
+          job_cluster_key: medallion_cluster
+          spark_python_task:
+            python_file: ../scripts/setup_schema.py
+          libraries:
+            - whl: ${artifacts.medallion_whl.path}
+
+        - task_key: run_pipeline
+          depends_on:
+            - task_key: setup_schema
+          job_cluster_key: medallion_cluster
+          spark_python_task:
+            python_file: ../scripts/run_pipeline.py
+            parameters:
+              - "--input-dir"
+              - ${var.csv_input_dir}
+              - "--bronze-database"
+              - ${var.bronze_database}
+              - "--silver-database"
+              - ${var.silver_database}
+              - "--gold-database"
+              - ${var.gold_database}
+          libraries:
+            - whl: ${artifacts.medallion_whl.path}
