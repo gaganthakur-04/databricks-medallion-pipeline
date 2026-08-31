@@ -10,7 +10,8 @@ include:
 artifacts:
   medallion_whl:
     type: whl
-    build: pip wheel . --wheel-dir dist
+    path: .
+    build: python3 -m pip wheel . --wheel-dir dist
 
 variables:
   csv_input_dir:
