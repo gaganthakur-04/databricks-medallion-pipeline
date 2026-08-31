@@ -166,16 +166,3 @@ Expanded `candidate-info.md` with full workspace URL, CLI profile, job ID, SQL w
 
 **YOUR EVALUATION:** Complete repo sweep — all stale placeholders replaced with real results.
 
----
-
-## Prompt 13: Fill prompt evaluations (2026-08-31)
-
-**PROMPT SENT:**
-
-> Update all the ai-prompts/ "YOUR EVALUATION: Pending" sections as per your understanding. Don't make it too descriptive just one line sentence.
-
-**AI RESPONSE SUMMARY:**
-
-Filled one-line evaluations across all `ai-prompts/` files where `_Pending_` remained.
-
-**YOUR EVALUATION:** Concise retrospective evaluations complete the assessment audit trail.
