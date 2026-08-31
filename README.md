@@ -41,7 +41,6 @@ Source CSVs (customers, orders, products)
 | Automated tests | Complete — 40 passed, 1 skipped |
 | Databricks deploy / E2E | **Complete** — validated 2026-08-31 on Free Edition (`ce` profile) |
 | Dashboard SQL queries (runtime) | **Complete** — all three queries return data via SQL warehouse |
-| Dashboard UI (visualizations) | **Pending** — SQL validated; manual UI creation in Databricks SQL still required |
 
 ## Repository Structure
 
