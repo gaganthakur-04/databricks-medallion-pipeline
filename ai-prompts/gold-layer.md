@@ -1,11 +1,12 @@
 # AI Prompts — Gold Layer
 
-_Prompt history for Gold aggregations._
+See **`silver-layer.md` Prompt 1** — Silver and Gold were implemented in the same session (2026-08-31).
 
-## Prompt 1
+## Gold-specific decisions
 
-**PROMPT SENT:** _Pending_
-
-**AI RESPONSE SUMMARY:** _Pending_
+- Revenue metrics use valid Silver rows with `order_status = 'Completed'`
+- `lifetime_value_actual` = sum of completed order amounts per customer
+- Behavioral segments: Inactive → High-Value → Repeat → One-Time (priority order)
+- Reference SQL in `src/gold/01_*.sql`, `02_*.sql`, `04_*.sql` for dashboard phase
 
 **YOUR EVALUATION:** _Pending_

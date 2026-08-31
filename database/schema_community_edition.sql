@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS silver.customers (
     customer_segment     STRING,
     lifetime_value       DECIMAL(12, 2),
     quality_check_result STRING,
+    is_valid             BOOLEAN,
     _silver_processed_at TIMESTAMP
 ) USING DELTA;
 
@@ -87,6 +88,7 @@ CREATE TABLE IF NOT EXISTS silver.orders (
     order_status         STRING,
     payment_date         DATE,
     quality_check_result STRING,
+    is_valid             BOOLEAN,
     _silver_processed_at TIMESTAMP
 ) USING DELTA;
 
@@ -99,6 +101,7 @@ CREATE TABLE IF NOT EXISTS silver.products (
     stock_quantity       INT,
     reorder_level        INT,
     quality_check_result STRING,
+    is_valid             BOOLEAN,
     _silver_processed_at TIMESTAMP
 ) USING DELTA;
 

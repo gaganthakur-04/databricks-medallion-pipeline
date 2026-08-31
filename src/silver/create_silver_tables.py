@@ -1,3 +1,6 @@
-"""Silver layer: create silver tables with quality_check_result column."""
+"""Silver layer: create and populate silver tables with quality flags."""
 
-# TODO: Phase 4 — orchestrate all quality checks; generate quality metrics report
+from src.silver.validate_all import main
+
+if __name__ == "__main__":
+    main()

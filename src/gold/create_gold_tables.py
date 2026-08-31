@@ -1,3 +1,6 @@
-"""Gold layer: create gold aggregation tables from valid Silver data."""
+"""Gold layer: create and populate gold tables."""
 
-# TODO: Phase 5 — execute SQL transformations and write Delta tables
+from src.gold.build_all import main
+
+if __name__ == "__main__":
+    main()

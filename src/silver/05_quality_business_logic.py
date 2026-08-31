@@ -1,3 +1,6 @@
-"""Silver layer: business logic validation (e.g. total_amount = quantity * unit_price)."""
+"""Silver layer: business logic validation entry point."""
 
-# TODO: Phase 4 — apply business rules; flag violations
+from src.silver.validate_all import main
+
+if __name__ == "__main__":
+    main()

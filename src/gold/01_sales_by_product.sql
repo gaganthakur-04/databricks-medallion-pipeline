@@ -1,4 +1,18 @@
 -- Gold layer: Sales by Product aggregation
--- TODO: Phase 5 — product_id, product_name, category, total_orders, total_revenue, avg_order_value
+-- Source: valid Silver orders (Completed) joined to valid Silver products
 
-SELECT 1;
+SELECT
+    p.product_id,
+    p.product_name,
+    p.category,
+    COUNT(*) AS total_orders,
+    ROUND(SUM(o.total_amount), 2) AS total_revenue,
+    ROUND(AVG(o.total_amount), 2) AS avg_order_value
+FROM silver.orders o
+INNER JOIN silver.products p
+    ON o.product_id = p.product_id
+    AND p.is_valid = TRUE
+WHERE o.is_valid = TRUE
+  AND o.order_status = 'Completed'
+GROUP BY p.product_id, p.product_name, p.category
+ORDER BY total_revenue DESC;
