@@ -9,4 +9,4 @@ See **`silver-layer.md` Prompt 1** — Silver and Gold were implemented in the s
 - Behavioral segments: Inactive → High-Value → Repeat → One-Time (priority order)
 - Reference SQL in `src/gold/01_*.sql`, `02_*.sql`, `04_*.sql` for dashboard phase
 
-**YOUR EVALUATION:** _Pending_
+**YOUR EVALUATION:** Gold logic matches spec and was validated on Databricks.
