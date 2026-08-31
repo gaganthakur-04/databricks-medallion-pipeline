@@ -72,3 +72,42 @@ Implemented a shared Bronze ingestion module for Databricks Community Edition:
 - Silver/Gold table DDL included in CE schema script for pipeline consistency but not populated yet
 
 **YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 2: Databricks CE execution checklist (2026-08-30)
+
+**PROMPT SENT:**
+
+> The Bronze implementation looks good enough to move to execution. Don't make further design changes or re-review the data-generation phase.
+>
+> Prepare the repository for first real execution in Databricks Community Edition. Inspect the current Bronze implementation and give a simple, step-by-step execution checklist covering:
+> 1. How to get generated CSV files into Databricks
+> 2. Where files should be placed based on current implementation
+> 3. How to run `database/schema_community_edition.sql`
+> 4. How to access/run `src/bronze/ingest_all.py`
+> 5. Databricks-specific configuration required
+> 6. SQL queries to verify Bronze tables after ingestion
+> 7. Expected row counts and audit-column results
+>
+> Do not modify implementation or create additional code. Point out CE assumptions to verify during execution. Keep checklist beginner-friendly.
+
+**AI RESPONSE SUMMARY:**
+
+Provided a linear Databricks CE runbook (no code changes): clone repo via Repos → upload CSVs to `dbfs:/FileStore/ecommerce/raw/` → run `schema_community_edition.sql` → set `sys.path` to repo root → run `from src.bronze.ingest_all import main; main()` → verify with SQL (10,000 / 100,000 / 500 rows; shared `_batch_id`; `_source_file` filenames). Listed CE assumptions to verify (Hive metastore, `/databricks` path detection, cluster vs SQL warehouse, table pre-creation).
+
+**YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 3: Commit and push Bronze changes (2026-08-30)
+
+**PROMPT SENT:**
+
+> Stage the changes, commit, and push for branch `cursor/phase1-setup-and-data-generation` (base: `master`). Exclude unrelated files. Write a concise commit message.
+
+**AI RESPONSE SUMMARY:**
+
+Staged 17 Bronze-related files only. Committed as `855a566` — "Implement Bronze CSV ingestion for Databricks Community Edition." Pushed to `origin/cursor/phase1-setup-and-data-generation`.
+
+**YOUR EVALUATION:** _Pending_
