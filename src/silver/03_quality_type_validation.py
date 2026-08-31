@@ -1,3 +1,12 @@
-"""Silver layer: type and format validation (enums, data types)."""
+"""Silver layer: type validation rules."""
 
-# TODO: Phase 4 — validate customer_segment, order_status, numeric types
+from src.silver.rules import CUST_BIZ_001, ORD_BIZ_001, ORD_BIZ_002, PROD_BIZ_001, PROD_BIZ_002, PROD_BIZ_003
+
+__all__ = [
+    "CUST_BIZ_001",
+    "ORD_BIZ_001",
+    "ORD_BIZ_002",
+    "PROD_BIZ_001",
+    "PROD_BIZ_002",
+    "PROD_BIZ_003",
+]

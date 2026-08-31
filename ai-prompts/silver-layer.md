@@ -1,11 +1,48 @@
 # AI Prompts — Silver Layer
 
-_Prompt history for Silver data quality validation._
+## Prompt 1: Silver and Gold implementation (2026-08-31)
 
-## Prompt 1
+**PROMPT SENT:**
 
-**PROMPT SENT:** _Pending_
+> Data generation is complete and merged. Bronze has been implemented and reviewed. Do not revisit those phases unless you encounter an actual blocker.
+>
+> Implement the remaining core Medallion layers: Silver and Gold.
+>
+> Use existing assessment requirements, `requirements-analysis.md`, `design-notes.md`, `data-model.md`, `data-quality-strategy.md`, and `cursor-workflow` documentation as source of truth.
+>
+> Silver: read Bronze tables, retain all rows, implement DQ validations with rule IDs, add quality/status columns, preserve invalid records, referential integrity checks, no silent removal.
+>
+> Gold: read from Silver, valid records for business metrics, required aggregations, dashboard-ready tables, simple assessment-focused implementation.
+>
+> Create end-to-end entry point Bronze → Silver → Gold. Add tests. Update documentation. Record in ai-prompts. Do not commit or push.
 
-**AI RESPONSE SUMMARY:** _Pending_
+**AI RESPONSE SUMMARY:**
+
+Implemented Silver and Gold with shared PySpark transforms:
+
+**Silver (`src/silver/`):**
+- `rules.py` — 13 rule IDs (COMP/UNIQ/REF/BIZ)
+- `transforms.py` — Spark DQ transforms; processing order products → customers → orders
+- `pandas_engine.py` — pandas mirror for local tests
+- `validate_all.py` — orchestrator with quality metrics report
+- Output columns: `quality_check_result`, `is_valid`, `_silver_processed_at`
+
+**Gold (`src/gold/`):**
+- `transforms.py` — sales_by_product, revenue_by_customer, customer_segmentation
+- `build_all.py` — orchestrator
+- Updated SQL reference files for dashboard queries
+- Valid Silver + Completed orders for revenue; behavioral segmentation with priority
+
+**Pipeline (`src/pipeline/run_all.py`):** Bronze → Silver → Gold with `--skip-bronze` option.
+
+**Tests:** 7 new tests in `tests/silver/` and `tests/gold/` — all passing (intentional DQ counts verified).
+
+**Schema:** added `is_valid` to `schema_community_edition.sql` silver tables.
+
+**Assumptions:**
+- Referential integrity uses distinct parent keys from Bronze customers/products
+- Duplicate PK rows flagged via `row_number() > 1` (10 customer, 20 order rows)
+- High-Value segment = revenue ≥ 75th percentile among customers with completed orders
+- Gold revenue excludes Pending/Cancelled orders
 
 **YOUR EVALUATION:** _Pending_

@@ -46,13 +46,33 @@ NULL foreign keys are flagged under **Completeness**, not referential integrity.
 
 ## Silver Flagging
 
-Assessment requires `quality_check_result` column on Silver tables. Format **(Assumption):**
+Assessment requires `quality_check_result` column on Silver tables. Format:
 
 ```
 PASS
-FAIL: completeness — email is NULL
-FAIL: uniqueness — duplicate customer_id; referential_integrity — customer_id not found
+FAIL: CUST_COMP_001 — email is NULL
+FAIL: ORD_UNIQ_001 — duplicate order_id; ORD_REF_001 — customer_id not found in customers
 ```
+
+Silver also includes `is_valid` (`true` when `quality_check_result = PASS`).
+
+### Rule ID Catalog
+
+| Rule ID | Check area | Entity |
+|---------|------------|--------|
+| `CUST_COMP_001` | Completeness | customers |
+| `CUST_UNIQ_001` | Uniqueness | customers |
+| `CUST_BIZ_001` | Business | customers |
+| `ORD_COMP_001` | Completeness | orders |
+| `ORD_COMP_002` | Completeness | orders |
+| `ORD_UNIQ_001` | Uniqueness | orders |
+| `ORD_REF_001` | Referential integrity | orders |
+| `ORD_REF_002` | Referential integrity | orders |
+| `ORD_BIZ_001` | Business | orders |
+| `ORD_BIZ_002` | Business | orders |
+| `PROD_BIZ_001` | Business | products |
+| `PROD_BIZ_002` | Business | products |
+| `PROD_BIZ_003` | Business | products |
 
 ## Quality Metrics Report
 
@@ -84,7 +104,7 @@ FROM silver.quality_metrics;
 
 ## Gold Inclusion Policy
 
-**(Assumption)** Gold aggregates use Silver rows where `quality_check_result = 'PASS'` (or equivalent).
+Gold aggregates use Silver rows where `is_valid = true`. Revenue metrics use `order_status = 'Completed'` only.
 
 ## Testing
 
