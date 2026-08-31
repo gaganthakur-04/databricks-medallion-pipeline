@@ -46,3 +46,31 @@ Implemented Silver and Gold with shared PySpark transforms:
 - Gold revenue excludes Pending/Cancelled orders
 
 **YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 2: Separate branch for Silver/Gold (2026-08-31)
+
+**PROMPT SENT:**
+
+> We needed these changes in a separate branch because this is not part of phase1 setup and data generation. Could you please do the needful if possible.
+
+**AI RESPONSE SUMMARY:**
+
+Created branch `cursor/phase2-silver-gold` from phase1 tip. Committed all 33 Silver/Gold/pipeline files as `15678a7`. Left `cursor/phase1-setup-and-data-generation` unchanged (data generation + Bronze only).
+
+**YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 3: Silver/Gold Git checkpoint (2026-08-31)
+
+**PROMPT SENT:**
+
+> The Silver and Gold implementation is complete for the current stage and the tests are passing. Prepare for Git checkpoint: inspect diff, stage Silver/Gold work only, commit with message about Silver quality validation and Gold analytics, push to `cursor/phase2-silver-gold`.
+
+**AI RESPONSE SUMMARY:**
+
+Verified 17 files, 20 tests passing. Committed `855a566` then later full implementation as `15678a7` on `cursor/phase2-silver-gold`. Pushed to remote.
+
+**YOUR EVALUATION:** _Pending_

@@ -8,32 +8,27 @@ resources:
         project: medallion-pipeline
         layer: end-to-end
 
-      job_clusters:
-        - job_cluster_key: medallion_cluster
-          new_cluster:
-            spark_version: ${var.spark_version}
-            node_type_id: ${var.node_type_id}
-            num_workers: 0
-            spark_conf:
-              spark.databricks.delta.preview.enabled: "true"
-              spark.databricks.cluster.profile: singleNode
-              spark.master: "local[*]"
-            custom_tags:
-              ResourceClass: SingleNode
-            data_security_mode: SINGLE_USER
+      # Free Edition / Community Edition workspaces require serverless compute.
+      environments:
+        - environment_key: medallion_env
+          spec:
+            client: "2"
+            dependencies:
+              - ${workspace.root_path}/artifacts/.internal/medallion_pipeline-0.1.0-py3-none-any.whl
 
       tasks:
         - task_key: setup_schema
-          job_cluster_key: medallion_cluster
+          environment_key: medallion_env
           spark_python_task:
             python_file: ../scripts/setup_schema.py
-          libraries:
-            - whl: ${artifacts.medallion_whl.path}
+            parameters:
+              - "--bundle-root"
+              - ${workspace.file_path}
 
         - task_key: run_pipeline
           depends_on:
             - task_key: setup_schema
-          job_cluster_key: medallion_cluster
+          environment_key: medallion_env
           spark_python_task:
             python_file: ../scripts/run_pipeline.py
             parameters:
@@ -45,5 +40,3 @@ resources:
               - ${var.silver_database}
               - "--gold-database"
               - ${var.gold_database}
-          libraries:
-            - whl: ${artifacts.medallion_whl.path}

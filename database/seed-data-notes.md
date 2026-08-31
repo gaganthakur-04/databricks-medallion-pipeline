@@ -21,7 +21,16 @@ See `src/data_generation/DATA_GENERATION_NOTES.md` for full details (~700 proble
 
 ## Upload to Databricks
 
-Upload CSVs to DBFS or a Unity Catalog volume before Bronze ingestion:
+**Free Edition (validated 2026-08-31):** public DBFS `/FileStore` is disabled. Upload to UC volume:
+
+```bash
+databricks fs cp data/customers.csv dbfs:/Volumes/workspace/default/ecommerce_raw/customers.csv --profile ce --overwrite
+# repeat for orders.csv and products.csv
+```
+
+Deploy/run with `--var="csv_input_dir=/Volumes/workspace/default/ecommerce_raw"`.
+
+**DBFS-enabled workspaces:**
 
 ```
 /dbfs/FileStore/ecommerce/raw/customers.csv

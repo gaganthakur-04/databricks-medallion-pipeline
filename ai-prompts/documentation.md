@@ -95,3 +95,73 @@ Readiness check passed on bundle files. Auth blocked: only profile `dev` exists 
 Final review: all changes limited to Bundle, packaging, tests, docs, `.gitignore`, and prompt history. No Bronze/Silver/Gold business-logic changes. Tests: 20 passed. Wheel build succeeded. Bundle static validation passed locally; Databricks deploy/E2E documented as pending due to CLI auth blocker. Committed and pushed to `cursor/phase2-silver-gold`.
 
 **YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 8: Final assessment-completeness pass (2026-08-31)
+
+**PROMPT SENT:**
+
+> We are doing the final assessment-completeness pass. Do NOT revisit Bronze, Silver, Gold, pipeline, or Bundle implementation. Create a separate branch. Complete dashboard SQL (Top 10 products bar, customer revenue histogram, customer segmentation pie) from Gold tables. Complete `candidate-info.md` and update README status. Run pytest. Commit `Complete dashboard artifacts and assessment documentation`. Document Databricks E2E/dashboard UI as pending. Do not falsely mark dashboard as deployed.
+
+**AI RESPONSE SUMMARY:**
+
+Branch `cursor/assessment-completion`. Dashboard SQL and guide completed. `candidate-info.md` and README status table updated. Full pytest: 40 passed, 1 skipped. Databricks deployment/dashboard UI documented as pending due to workspace auth.
+
+**YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 9: Commit only, no push (2026-08-31)
+
+**PROMPT SENT:**
+
+> Don't push the changes, just commit them. I'll review the candidate information myself. Also add all the prompts that I have shared with you in the respective folder.
+
+**AI RESPONSE SUMMARY:**
+
+Backfilled missing prompt history (Silver/Gold branch, Git checkpoint, assessment pass). Committed assessment-completion changes locally without push. User to review `candidate-info.md` before any push.
+
+**YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 10: Databricks E2E validation pass (2026-08-31)
+
+**PROMPT SENT:**
+
+> Databricks authentication is now working. Final deployment and end-to-end validation pass: verify auth, validate bundle, check input data, deploy, run job, validate Bronze/Silver/Gold, run dashboard SQL, consistency checks, pytest, update docs. Do not redesign architecture or revisit business logic unless runtime failure requires minimal fix. Do not commit/push until validation report provided.
+
+**AI RESPONSE SUMMARY:**
+
+Authenticated with profile `ce` (Free Edition). Bundle validate/deploy succeeded. Public DBFS `/FileStore` disabled — created UC volume `workspace.default.ecommerce_raw`, uploaded CSVs, deployed with `csv_input_dir` override. Fixed serverless job runtime issues (`client: "2"`, `setup_schema` bundle-root arg, SQL comment semicolon parsing). Job run SUCCESS: Bronze 10K/100K/500, Silver DQ 9940/88413/500 valid, Gold 500/9931/4. Dashboard SQL queries validated via SQL warehouse. pytest 40 passed, 1 skipped. Dashboard UI not created (manual step). Updated README, BUNDLE.md, candidate-info.md, DASHBOARD_GUIDE.md.
+
+**YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 11: Commit E2E docs and prompts (2026-08-31)
+
+**PROMPT SENT:**
+
+> Update all READMEs and info files with updated Databricks reports. Maintain prompts and commit changes.
+
+**AI RESPONSE SUMMARY:**
+
+Backfilled prompt history (documentation, dashboard, debugging). Updated BUNDLE.md, setup-notes, design-notes, bronze README, project-context, and related status docs with validated Free Edition deployment results. Committed runtime fixes and documentation updates.
+
+**YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 12: Complete repo status sweep (2026-08-31)
+
+**PROMPT SENT:**
+
+> candidate-info is not updated. Go through complete repo and replace details like `Not available / pending Databricks workspace access` and similar placeholders with actual validated Databricks environment and E2E results.
+
+**AI RESPONSE SUMMARY:**
+
+Expanded `candidate-info.md` with full workspace URL, CLI profile, job ID, SQL warehouse, UC volume path, validated row counts, deploy commands, and checklist. Updated `requirements-analysis.md` traceability matrix, `task-breakdown.md`, `spec.md` acceptance criteria, `test-strategy.md`, `debugging-notes.md`, `code-review-notes.md`, layer READMEs, and removed stale "when workspace access is available" wording across docs.
+
+**YOUR EVALUATION:** _Pending_

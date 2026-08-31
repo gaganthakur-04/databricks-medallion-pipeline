@@ -30,13 +30,18 @@ Source CSVs (customers, orders, products)
 | Phase | Status |
 |-------|--------|
 | Requirements analysis | Complete |
-| Repository structure | Aligned to assessment template |
-| Data generation | Script ready (`src/data_generation/`) |
-| Bronze layer | Placeholder modules |
-| Silver layer | Placeholder modules |
-| Gold layer | Placeholder SQL/modules |
-| Dashboard | Placeholder queries |
-| Tests | Data generation tests |
+| Repository structure | Complete |
+| Data generation | Complete (`src/data_generation/`) |
+| Bronze layer | Complete (`src/bronze/`) |
+| Silver layer | Complete (`src/silver/`) |
+| Gold layer | Complete (`src/gold/`) |
+| End-to-end pipeline | Complete (`src/pipeline/run_all.py`) |
+| Databricks Asset Bundle | Complete (`databricks.yml`, `BUNDLE.md`) |
+| Dashboard SQL queries | Complete (`src/dashboard/dashboard_queries.sql`) |
+| Automated tests | Complete — 40 passed, 1 skipped |
+| Databricks deploy / E2E | **Complete** — validated 2026-08-31 on Free Edition (`ce` profile) |
+| Dashboard SQL queries (runtime) | **Complete** — all three queries return data via SQL warehouse |
+| Dashboard UI (visualizations) | **Pending** — SQL validated; manual UI creation in Databricks SQL still required |
 
 ## Repository Structure
 
@@ -81,9 +86,14 @@ python src/data_generation/generate_sample_data.py
 # 3. Run tests
 pytest tests/ -v
 
-# 4. Run database setup in Databricks
-#    See database/schema.sql
+# 4. Databricks deploy and run (validated on Free Edition — see BUNDLE.md)
+#    databricks bundle deploy -t dev --profile ce
+#    databricks bundle run medallion_pipeline -t dev --profile ce
 ```
+
+## Databricks Deployment
+
+Bundle configuration is in `databricks.yml`. **Validated on Databricks Free Edition (2026-08-31):** bundle deploy, job run (`setup_schema` → `run_pipeline`), Bronze/Silver/Gold row counts, and dashboard SQL queries all succeeded. See `BUNDLE.md` and `src/dashboard/DASHBOARD_GUIDE.md`.
 
 ## Documentation Index
 

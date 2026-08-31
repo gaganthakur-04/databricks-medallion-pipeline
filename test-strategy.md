@@ -36,10 +36,10 @@ pytest tests/ -v
 
 ## Databricks Validation
 
-Manual checklist in Databricks after deployment:
+Validated on Databricks Free Edition (2026-08-31, profile `ce`):
 
-- [ ] Bronze row counts match CSVs
-- [ ] Silver retains all Bronze rows
-- [ ] Quality metrics report shows % passed per check
-- [ ] Gold tables populated
-- [ ] Dashboard displays 3 visualizations
+- [x] Bronze row counts match CSVs (10,000 / 100,000 / 500)
+- [x] Silver retains all Bronze rows (10,000 / 100,000 / 500)
+- [x] Quality metrics report shows % passed per check (99.4% / 88.41% / 100%)
+- [x] Gold tables populated (500 / 9,931 / 4)
+- [ ] Dashboard displays 3 visualizations (SQL queries validated; UI not created)
