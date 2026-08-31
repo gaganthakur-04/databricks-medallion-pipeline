@@ -40,3 +40,11 @@ Reference SQL for dashboards: `src/gold/01_sales_by_product.sql`, `02_revenue_by
 from src.pipeline.run_all import main
 main()
 ```
+
+## Validated on Databricks (2026-08-31)
+
+| Table | Rows |
+|-------|------|
+| `gold.sales_by_product` | 500 |
+| `gold.revenue_by_customer` | 9,931 |
+| `gold.customer_segmentation` | 4 (Repeat, High-Value, One-Time, Inactive) |

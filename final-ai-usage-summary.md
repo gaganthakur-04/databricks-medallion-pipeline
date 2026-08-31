@@ -1,6 +1,6 @@
 # Final AI Usage Summary
 
-> To be completed before submission. Summarize how AI tools (primarily Cursor) were used across the project lifecycle.
+Summary of how AI tools (primarily Cursor) were used across the project lifecycle. Databricks E2E validation completed 2026-08-31.
 
 ## Overview
 

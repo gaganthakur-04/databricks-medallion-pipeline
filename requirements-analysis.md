@@ -205,14 +205,15 @@ See [Section 9 in cursor-workflow/spec.md](cursor-workflow/spec.md#9-open-questi
 
 | Requirement | Artifact | Status |
 |-------------|----------|--------|
-| 10K customers with DQ issues | `src/data_generation/`, `src/silver/` | Generator ready |
-| 100K orders with DQ issues | `src/data_generation/`, `src/silver/` | Generator ready |
-| 500 products | `src/data_generation/` | Generator ready |
-| Bronze ingestion | `src/bronze/` | Placeholders |
-| Silver DQ flagging (4 areas) | `src/silver/`, `data-quality-strategy.md` | Placeholders |
-| Gold: Sales by Product | `src/gold/` | Placeholders |
-| Gold: Revenue by Customer | `src/gold/` | Placeholders |
-| Gold: Customer Segmentation | `src/gold/` | Placeholders |
-| Dashboard (3 viz minimum) | `src/dashboard/` | Placeholders |
-| AI lifecycle artifacts | `ai-prompts/`, root docs | Structure created |
-| Tests | `tests/` | Data generation tests |
+| 10K customers with DQ issues | `src/data_generation/`, `src/silver/` | Complete — validated on Databricks |
+| 100K orders with DQ issues | `src/data_generation/`, `src/silver/` | Complete — validated on Databricks |
+| 500 products | `src/data_generation/` | Complete — validated on Databricks |
+| Bronze ingestion | `src/bronze/` | Complete — 10K / 100K / 500 rows on Databricks |
+| Silver DQ flagging (4 areas) | `src/silver/`, `data-quality-strategy.md` | Complete — 9,940 / 88,413 / 500 valid |
+| Gold: Sales by Product | `src/gold/` | Complete — 500 rows |
+| Gold: Revenue by Customer | `src/gold/` | Complete — 9,931 rows |
+| Gold: Customer Segmentation | `src/gold/` | Complete — 4 segments |
+| Dashboard (3 viz minimum) | `src/dashboard/` | SQL complete and validated; UI manual |
+| Databricks Bundle deploy + E2E | `databricks.yml`, `BUNDLE.md` | Complete — 2026-08-31 |
+| AI lifecycle artifacts | `ai-prompts/`, root docs | Complete |
+| Tests | `tests/` | Complete — 40 passed, 1 skipped |

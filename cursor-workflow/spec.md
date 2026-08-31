@@ -224,11 +224,12 @@ Manual or Databricks Job with tasks in layer order. Not specified in assessment.
 
 ## 10. Acceptance Criteria
 
-- [ ] Three CSVs generated with correct row counts and DQ issues
-- [ ] Bronze tables contain all source rows
-- [ ] Silver tables contain all Bronze rows with quality metadata
-- [ ] All intentional DQ issues detected and flagged
-- [ ] Gold tables: `sales_by_product`, `revenue_by_customer`, `customer_segmentation`
-- [ ] Dashboard with 3+ required visualizations
-- [ ] Tests pass
-- [ ] Documentation and AI artifacts complete
+- [x] Three CSVs generated with correct row counts and DQ issues
+- [x] Bronze tables contain all source rows (validated: 10K / 100K / 500)
+- [x] Silver tables contain all Bronze rows with quality metadata
+- [x] All intentional DQ issues detected and flagged
+- [x] Gold tables: `sales_by_product`, `revenue_by_customer`, `customer_segmentation`
+- [ ] Dashboard with 3+ required visualizations (SQL validated; UI not created)
+- [x] Tests pass (40 passed, 1 skipped)
+- [x] Documentation and AI artifacts complete
+- [x] Databricks Bundle deploy and E2E job run validated (2026-08-31)

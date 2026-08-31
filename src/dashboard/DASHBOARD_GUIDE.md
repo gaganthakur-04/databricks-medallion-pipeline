@@ -27,7 +27,9 @@ All queries are in [`dashboard_queries.sql`](dashboard_queries.sql). They read f
 - **Columns:** `segment_type`, `customer_count`, `total_revenue`, `avg_revenue`
 - **Chart config:** Pie chart with `segment_type` as slice, `customer_count` as value
 
-## Setup in Databricks SQL (when workspace access is available)
+## Setup in Databricks SQL
+
+Gold tables are populated and queries validated on Databricks Free Edition (2026-08-31).
 
 1. Ensure Gold tables are populated (`gold.sales_by_product`, `gold.revenue_by_customer`, `gold.customer_segmentation`).
 2. Open **SQL** → **Dashboards** → **Create dashboard**.

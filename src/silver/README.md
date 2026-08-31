@@ -53,3 +53,11 @@ main()
 SELECT is_valid, COUNT(*) FROM silver.customers GROUP BY is_valid;
 SELECT quality_check_result FROM silver.orders WHERE NOT is_valid LIMIT 10;
 ```
+
+## Validated on Databricks (2026-08-31)
+
+| Table | Rows | Valid rows |
+|-------|------|------------|
+| `silver.customers` | 10,000 | 9,940 (99.4%) |
+| `silver.orders` | 100,000 | 88,413 (88.41%) |
+| `silver.products` | 500 | 500 (100%) |

@@ -86,8 +86,9 @@ python src/data_generation/generate_sample_data.py
 # 3. Run tests
 pytest tests/ -v
 
-# 4. Databricks setup and pipeline (when workspace access is available)
-#    See database/schema_community_edition.sql and BUNDLE.md
+# 4. Databricks deploy and run (validated on Free Edition — see BUNDLE.md)
+#    databricks bundle deploy -t dev --profile ce
+#    databricks bundle run medallion_pipeline -t dev --profile ce
 ```
 
 ## Databricks Deployment

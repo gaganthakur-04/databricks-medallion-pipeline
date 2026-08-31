@@ -151,3 +151,17 @@ Authenticated with profile `ce` (Free Edition). Bundle validate/deploy succeeded
 Backfilled prompt history (documentation, dashboard, debugging). Updated BUNDLE.md, setup-notes, design-notes, bronze README, project-context, and related status docs with validated Free Edition deployment results. Committed runtime fixes and documentation updates.
 
 **YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 12: Complete repo status sweep (2026-08-31)
+
+**PROMPT SENT:**
+
+> candidate-info is not updated. Go through complete repo and replace details like `Not available / pending Databricks workspace access` and similar placeholders with actual validated Databricks environment and E2E results.
+
+**AI RESPONSE SUMMARY:**
+
+Expanded `candidate-info.md` with full workspace URL, CLI profile, job ID, SQL warehouse, UC volume path, validated row counts, deploy commands, and checklist. Updated `requirements-analysis.md` traceability matrix, `task-breakdown.md`, `spec.md` acceptance criteria, `test-strategy.md`, `debugging-notes.md`, `code-review-notes.md`, layer READMEs, and removed stale "when workspace access is available" wording across docs.
+
+**YOUR EVALUATION:** _Pending_
