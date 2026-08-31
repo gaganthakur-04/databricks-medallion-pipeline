@@ -13,6 +13,13 @@ data/*.csv
 # Databricks
 .databricks/
 *.dbc
+bundle.local.yml
+dist/
+build/
+*.whl
+
+# Local bundle overrides (do not commit secrets)
+.databricks/bundle/
 
 # IDE
 .idea/

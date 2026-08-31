@@ -29,7 +29,7 @@ Capture architecture decisions, trade-offs, and rationale as the pipeline is bui
 | 2026-08-31 | Silver rule IDs in `quality_check_result` | Traceable DQ failures per assessment | Free-text only |
 | 2026-08-31 | `is_valid` boolean on Silver tables | Clear valid/invalid filter for Gold | Parse `quality_check_result` only |
 | 2026-08-31 | Gold uses valid Silver + Completed orders | Accurate revenue metrics | All order statuses |
-| 2026-08-31 | Behavioral segmentation priority | Mutually exclusive dashboard segments | Overlapping segment labels |
+| 2026-08-31 | Databricks Asset Bundle for job deployment | Production-quality deploy/run path | Manual notebook execution only |
 
 ## Bronze Layer (implemented)
 
@@ -53,3 +53,4 @@ Capture architecture decisions, trade-offs, and rationale as the pipeline is bui
 - **Output:** `gold.sales_by_product`, `gold.revenue_by_customer`, `gold.customer_segmentation`
 - **Revenue filter:** `order_status = 'Completed'`
 - **Orchestration:** `src/pipeline/run_all.py` runs Bronze → Silver → Gold
+- **Bundle:** `databricks.yml` + `resources/medallion_pipeline.job.yml` (see `BUNDLE.md`)
