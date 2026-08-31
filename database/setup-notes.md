@@ -1,10 +1,42 @@
 # Database Setup Notes
 
-## Databricks Community Edition (recommended for this assessment)
+## Databricks Free Edition (validated 2026-08-31)
 
-Community Edition uses the **Hive metastore** (`CREATE DATABASE`), not Unity Catalog.
+Free Edition uses the **Hive metastore** (`CREATE DATABASE`) for `bronze`, `silver`, and `gold`. Public DBFS `/FileStore` is **disabled** on Free Edition — use a UC volume for source CSVs.
 
-1. Upload generated CSVs to DBFS (Databricks UI → **Data** → **Upload**):
+1. Create a volume and upload generated CSVs from local `data/`:
+
+   ```bash
+   databricks volumes create workspace default ecommerce_raw MANAGED --profile ce
+   databricks fs cp data/customers.csv dbfs:/Volumes/workspace/default/ecommerce_raw/customers.csv --profile ce --overwrite
+   databricks fs cp data/orders.csv dbfs:/Volumes/workspace/default/ecommerce_raw/orders.csv --profile ce --overwrite
+   databricks fs cp data/products.csv dbfs:/Volumes/workspace/default/ecommerce_raw/products.csv --profile ce --overwrite
+   ```
+
+2. Deploy and run the bundle (see `BUNDLE.md`) with:
+
+   ```bash
+   --var="csv_input_dir=/Volumes/workspace/default/ecommerce_raw"
+   ```
+
+3. Verify after job run:
+
+   ```sql
+   SELECT 'bronze.customers' AS t, COUNT(*) FROM bronze.customers
+   UNION ALL SELECT 'bronze.orders', COUNT(*) FROM bronze.orders
+   UNION ALL SELECT 'bronze.products', COUNT(*) FROM bronze.products;
+   -- Expected: 10000 / 100000 / 500
+   ```
+
+Default Bronze CSV path variable in `databricks.yml`: `dbfs:/FileStore/ecommerce/raw` (override on Free Edition as above).
+
+---
+
+## Legacy Community Edition (DBFS FileStore)
+
+If your workspace still allows public DBFS:
+
+1. Upload CSVs to:
 
    ```
    /FileStore/ecommerce/raw/customers.csv
@@ -50,7 +82,8 @@ Upload generated CSVs from local `data/` to the workspace landing zone:
 
 | Environment | Path |
 |-------------|------|
-| Community Edition | `dbfs:/FileStore/ecommerce/raw/` |
+| Databricks Free Edition (validated) | `/Volumes/workspace/default/ecommerce_raw/` |
+| Legacy CE / DBFS-enabled workspaces | `dbfs:/FileStore/ecommerce/raw/` |
 | Local dev / tests | `<repo>/data/` |
 
 Bronze ingestion paths are configurable via `--input-dir` (see `src/bronze/README.md`).

@@ -4,13 +4,20 @@ Deploy and run the Medallion pipeline (`Bronze → Silver → Gold`) on Databric
 
 ## Current Status
 
-**Local validation:** complete (20 tests passing, wheel builds successfully).
+**Local validation:** complete (40 tests passing, 1 skipped; wheel builds successfully).
 
-**Databricks deployment and end-to-end execution:** **not completed** — pending authentication.
+**Databricks deployment and end-to-end execution:** **complete** — validated 2026-08-31 on Databricks Free Edition using CLI profile `ce`.
 
-> Databricks deployment and end-to-end execution could not be completed because the available Databricks CLI profiles are not authenticated/authorized for the required Community Edition workspace.
+| Step | Result |
+|------|--------|
+| `bundle validate -t dev --profile ce` | OK |
+| `bundle deploy -t dev --profile ce` | OK |
+| `bundle run medallion_pipeline -t dev --profile ce` | SUCCESS |
+| Bronze row counts | 10,000 / 100,000 / 500 |
+| Silver valid rows | 9,940 / 88,413 / 500 |
+| Gold tables | 500 / 9,931 / 4 rows |
 
-The only configured local profile (`dev`) points to an enterprise workspace and returns `Forbidden` / IP ACL errors. No Databricks E2E results are claimed until a valid CE profile is configured and the job is run.
+> **Free Edition notes:** Public DBFS `/FileStore` is disabled. Upload source CSVs to a UC volume (e.g. `workspace.default.ecommerce_raw`) and deploy with `--var="csv_input_dir=/Volumes/workspace/default/ecommerce_raw"`. Jobs require **serverless** compute (`environment_key` + `client: "2"`).
 
 ## Bundle Structure
 
@@ -28,26 +35,20 @@ The job reuses the existing pipeline implementation in `src/` — no business-lo
 ## Prerequisites
 
 1. **Databricks CLI** v0.218+ (`databricks --version`)
-2. **Authenticated CLI profile** for your workspace (Community Edition or other):
+2. **Authenticated CLI profile** for your Databricks Free Edition workspace:
 
    ```bash
-   # Log in to your Community Edition workspace (browser OAuth — no token in repo)
-   databricks auth login --host https://community.cloud.databricks.com --profile community
-   ```
-
-   Verify:
-
-   ```bash
+   databricks auth login --host https://<your-workspace>.cloud.databricks.com --profile ce
    databricks auth profiles
-   # community  https://community.cloud.databricks.com  YES
+   # ce  https://<your-workspace>.cloud.databricks.com  YES
    ```
 
-   Use `--profile community` (or your profile name) on all bundle commands below.
+   Use `--profile ce` on all bundle commands below.
 
    > **Note:** Do not use an enterprise profile pointing at a different workspace. A `Forbidden` or IP ACL error means the profile is wrong or your network is blocked by that workspace.
 
-3. **Source CSVs** uploaded to DBFS (default: `dbfs:/FileStore/ecommerce/raw/`)
-4. **Python 3.10+** locally for wheel build and tests
+3. **Source CSVs** uploaded to a readable path (see Free Edition notes below)
+4. **Python 3.10+** locally for wheel build and tests (`source .venv/bin/activate` recommended)
 
 ## Configuration
 
@@ -55,12 +56,12 @@ All environment-specific values are bundle **variables** (no hardcoded secrets o
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `csv_input_dir` | `dbfs:/FileStore/ecommerce/raw` | Bronze CSV location |
+| `csv_input_dir` | `dbfs:/FileStore/ecommerce/raw` | Bronze CSV location (override for Free Edition — see below) |
 | `bronze_database` | `bronze` | Bronze Hive database |
 | `silver_database` | `silver` | Silver Hive database |
 | `gold_database` | `gold` | Gold Hive database |
-| `spark_version` | `15.4.x-scala2.12` | Job cluster runtime |
-| `node_type_id` | `i3.xlarge` | Override for CE / cloud provider |
+| `spark_version` | `15.4.x-scala2.12` | Legacy cluster runtime (not used on Free Edition serverless job) |
+| `node_type_id` | `i3.xlarge` | Legacy cluster node type (not used on Free Edition serverless job) |
 
 Override at deploy time:
 
@@ -92,13 +93,17 @@ databricks bundle validate -t dev --profile <your-profile>
 ## Deploy
 
 ```bash
-databricks bundle deploy -t dev --profile <your-profile>
+source .venv/bin/activate
+~/bin/databricks bundle deploy -t dev --profile ce \
+  --var="csv_input_dir=/Volumes/workspace/default/ecommerce_raw"
 ```
+
+> On Databricks Free Edition, public DBFS `/FileStore` is disabled. Upload CSVs to a UC volume and pass `csv_input_dir` as shown above.
 
 ## Run End-to-End Pipeline
 
 ```bash
-databricks bundle run medallion_pipeline -t dev --profile <your-profile>
+~/bin/databricks bundle run medallion_pipeline -t dev --profile ce
 ```
 
 Job tasks:
@@ -125,17 +130,25 @@ Expected Bronze/Silver row counts: 10,000 / 100,000 / 500.
 | `dev` | development | Default; personal workspace deployment |
 | `prod` | production | Future staging/production (same variables, different profile) |
 
-## Community Edition Notes
+## Community Edition / Free Edition Notes
 
-- Use `schema_community_edition.sql` (Hive metastore — no Unity Catalog).
-- Override `node_type_id` and `spark_version` if the default cluster spec is unavailable.
-- Upload CSVs to `/FileStore/ecommerce/raw/` before running the job.
-- CE may restrict cluster types; check **Compute** in your workspace UI.
+- Use `schema_community_edition.sql` (Hive metastore databases `bronze`, `silver`, `gold`).
+- **Serverless only** — job uses `environment_key` with `client: "2"` (cluster config is not supported).
+- **Public DBFS `/FileStore` is disabled** — upload CSVs to a UC volume instead:
+
+  ```bash
+  databricks volumes create workspace default ecommerce_raw MANAGED --profile ce
+  databricks fs cp data/customers.csv dbfs:/Volumes/workspace/default/ecommerce_raw/customers.csv --profile ce --overwrite
+  # repeat for orders.csv and products.csv
+  ```
+
+- Deploy with `--var="csv_input_dir=/Volumes/workspace/default/ecommerce_raw"`.
+- Use patched CLI `~/bin/databricks` v0.238.1+ if Homebrew CLI shows Terraform GPG errors.
 
 ## Limitations
 
-- **Databricks E2E validation is pending** — requires a valid CE CLI profile (see Prerequisites).
+- **Databricks SQL Dashboard UI** — SQL queries validated; visual dashboard must be created manually in the SQL UI.
 - Bundle deploy/run requires authenticated CLI access to the target workspace.
-- Wheel build requires `pip` locally; cluster runtime provides PySpark/Delta.
-- Generated CSVs (`data/*.csv`) are excluded from bundle sync — use DBFS upload.
-- Dashboard phase is not included in this job.
+- Wheel build requires `python3 -m pip` locally (activate `.venv` before deploy).
+- Generated CSVs (`data/*.csv`) are excluded from bundle sync — upload separately to UC volume or DBFS.
+- Dashboard visualizations are not included in the bundle job (run queries from `src/dashboard/dashboard_queries.sql`).

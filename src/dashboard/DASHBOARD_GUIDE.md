@@ -37,13 +37,15 @@ All queries are in [`dashboard_queries.sql`](dashboard_queries.sql). They read f
 
 ## Current Status
 
-**SQL queries:** implemented in `dashboard_queries.sql`.
+**SQL queries:** implemented in `dashboard_queries.sql` and **validated against live Gold tables** (2026-08-31).
 
-**Databricks SQL Dashboard UI:** **not created or validated.**
+**Databricks SQL Dashboard UI:** **not created** — queries return usable data via SQL warehouse; visual dashboard must still be built manually in the Databricks SQL UI.
 
-> The actual Databricks SQL Dashboard could not be created or validated because Databricks workspace authentication is currently unavailable. Deployment and end-to-end execution remain pending until a valid Community Edition CLI profile is configured.
-
-Do not assume the dashboard has been deployed until it is created manually in the workspace.
+| Query | Rows returned | Usable for chart |
+|-------|---------------|------------------|
+| Top 10 products by revenue | 10 | Yes (bar) |
+| Customer revenue distribution | 5 buckets | Yes (histogram) |
+| Customer segmentation | 4 segments | Yes (pie) |
 
 ## Prerequisites
 

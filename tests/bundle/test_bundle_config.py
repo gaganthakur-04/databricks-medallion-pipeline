@@ -48,3 +48,10 @@ def test_setup_schema_splits_sql():
     statements = _split_sql_statements("CREATE DATABASE bronze;\n-- comment\nCREATE TABLE t (id INT);")
     assert len(statements) == 2
     assert statements[0].startswith("CREATE DATABASE")
+
+    # Semicolons inside SQL comments must not create extra statements.
+    statements = _split_sql_statements(
+        "CREATE DATABASE silver;\n-- note; populated later\nCREATE TABLE silver.t (id INT);"
+    )
+    assert len(statements) == 2
+    assert statements[1].startswith("CREATE TABLE")

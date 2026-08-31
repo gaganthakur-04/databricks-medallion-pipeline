@@ -17,7 +17,12 @@ Raw CSV ingestion into Delta tables. Bronze preserves source columns as read fro
 | `orders.csv` | 100,000 order rows |
 | `products.csv` | 500 product rows |
 
-Generated locally via `src/data_generation/generate_sample_data.py` into `data/`, then uploaded to Databricks DBFS for cluster execution.
+Generated locally via `src/data_generation/generate_sample_data.py` into `data/`, then uploaded to Databricks for job execution.
+
+| Workspace type | Upload target |
+|----------------|---------------|
+| Free Edition (validated) | UC volume `/Volumes/workspace/default/ecommerce_raw/` |
+| DBFS-enabled workspaces | `dbfs:/FileStore/ecommerce/raw/` |
 
 ## Bronze Table Names
 
@@ -57,7 +62,9 @@ Run `database/schema_community_edition.sql` in a SQL notebook or via `%sql` cell
 
 ### 2. Upload CSVs
 
-Upload to `/FileStore/ecommerce/raw/` (default input path on Databricks).
+**Free Edition:** upload to UC volume `workspace.default.ecommerce_raw` (see `BUNDLE.md`).
+
+**DBFS-enabled workspaces:** upload to `/FileStore/ecommerce/raw/` (default input path).
 
 ### 3. Sync code to workspace
 

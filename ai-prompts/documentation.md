@@ -123,3 +123,31 @@ Branch `cursor/assessment-completion`. Dashboard SQL and guide completed. `candi
 Backfilled missing prompt history (Silver/Gold branch, Git checkpoint, assessment pass). Committed assessment-completion changes locally without push. User to review `candidate-info.md` before any push.
 
 **YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 10: Databricks E2E validation pass (2026-08-31)
+
+**PROMPT SENT:**
+
+> Databricks authentication is now working. Final deployment and end-to-end validation pass: verify auth, validate bundle, check input data, deploy, run job, validate Bronze/Silver/Gold, run dashboard SQL, consistency checks, pytest, update docs. Do not redesign architecture or revisit business logic unless runtime failure requires minimal fix. Do not commit/push until validation report provided.
+
+**AI RESPONSE SUMMARY:**
+
+Authenticated with profile `ce` (Free Edition). Bundle validate/deploy succeeded. Public DBFS `/FileStore` disabled — created UC volume `workspace.default.ecommerce_raw`, uploaded CSVs, deployed with `csv_input_dir` override. Fixed serverless job runtime issues (`client: "2"`, `setup_schema` bundle-root arg, SQL comment semicolon parsing). Job run SUCCESS: Bronze 10K/100K/500, Silver DQ 9940/88413/500 valid, Gold 500/9931/4. Dashboard SQL queries validated via SQL warehouse. pytest 40 passed, 1 skipped. Dashboard UI not created (manual step). Updated README, BUNDLE.md, candidate-info.md, DASHBOARD_GUIDE.md.
+
+**YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 11: Commit E2E docs and prompts (2026-08-31)
+
+**PROMPT SENT:**
+
+> Update all READMEs and info files with updated Databricks reports. Maintain prompts and commit changes.
+
+**AI RESPONSE SUMMARY:**
+
+Backfilled prompt history (documentation, dashboard, debugging). Updated BUNDLE.md, setup-notes, design-notes, bronze README, project-context, and related status docs with validated Free Edition deployment results. Committed runtime fixes and documentation updates.
+
+**YOUR EVALUATION:** _Pending_

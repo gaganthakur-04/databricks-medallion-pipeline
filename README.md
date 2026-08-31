@@ -39,7 +39,9 @@ Source CSVs (customers, orders, products)
 | Databricks Asset Bundle | Complete (`databricks.yml`, `BUNDLE.md`) |
 | Dashboard SQL queries | Complete (`src/dashboard/dashboard_queries.sql`) |
 | Automated tests | Complete — 40 passed, 1 skipped |
-| Databricks deploy / E2E / Dashboard UI | **Pending** — workspace authentication unavailable |
+| Databricks deploy / E2E | **Complete** — validated 2026-08-31 on Free Edition (`ce` profile) |
+| Dashboard SQL queries (runtime) | **Complete** — all three queries return data via SQL warehouse |
+| Dashboard UI (visualizations) | **Pending** — SQL validated; manual UI creation in Databricks SQL still required |
 
 ## Repository Structure
 
@@ -90,7 +92,7 @@ pytest tests/ -v
 
 ## Databricks Deployment
 
-Bundle configuration is in `databricks.yml`. Local tests pass; actual Databricks deployment, end-to-end job execution, and SQL Dashboard UI creation remain **pending** because workspace authentication is currently unavailable. See `BUNDLE.md` and `src/dashboard/DASHBOARD_GUIDE.md`.
+Bundle configuration is in `databricks.yml`. **Validated on Databricks Free Edition (2026-08-31):** bundle deploy, job run (`setup_schema` → `run_pipeline`), Bronze/Silver/Gold row counts, and dashboard SQL queries all succeeded. See `BUNDLE.md` and `src/dashboard/DASHBOARD_GUIDE.md`.
 
 ## Documentation Index
 

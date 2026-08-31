@@ -4,18 +4,21 @@
 
 ## Overview
 
+Validated end-to-end on Databricks Free Edition (2026-08-31). AI assisted with bundle configuration, serverless job debugging, documentation, and SQL validation. Dashboard UI creation remains a manual step.
+
 | Phase | AI used? | Effectiveness (1–5) | Notes |
 |-------|----------|---------------------|-------|
-| Requirements analysis | | | |
-| Design | | | |
-| Data generation | | | |
-| Bronze implementation | | | |
-| Silver implementation | | | |
-| Gold implementation | | | |
-| Dashboard | | | |
-| Testing | | | |
-| Debugging | | | |
-| Documentation | | | |
+| Requirements analysis | Yes | | |
+| Design | Yes | | |
+| Data generation | Yes | | |
+| Bronze implementation | Yes | | |
+| Silver implementation | Yes | | |
+| Gold implementation | Yes | | |
+| Dashboard | Yes | | SQL validated; UI manual |
+| Databricks deploy / E2E | Yes | | Bundle job run succeeded |
+| Testing | Yes | | 40 passed, 1 skipped |
+| Debugging | Yes | | CLI, serverless, DBFS/volume issues |
+| Documentation | Yes | | Status docs updated post-E2E |
 
 ## Prompt patterns that worked well
 

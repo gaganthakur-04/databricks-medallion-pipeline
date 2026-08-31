@@ -12,7 +12,7 @@ resources:
       environments:
         - environment_key: medallion_env
           spec:
-            client: "1"
+            client: "2"
             dependencies:
               - ${workspace.root_path}/artifacts/.internal/medallion_pipeline-0.1.0-py3-none-any.whl
 
@@ -21,6 +21,9 @@ resources:
           environment_key: medallion_env
           spark_python_task:
             python_file: ../scripts/setup_schema.py
+            parameters:
+              - "--bundle-root"
+              - ${workspace.file_path}
 
         - task_key: run_pipeline
           depends_on:

@@ -113,6 +113,6 @@ Gold aggregates use `is_valid = true` Silver records only. Invalid records remai
 
 ## Current Project State
 
-**Phase:** Repository aligned to assessment template. Data generator ready; pipeline placeholders in `src/`.
+**Phase:** End-to-end pipeline implemented and **validated on Databricks Free Edition** (2026-08-31). Dashboard SQL queries validated; dashboard UI creation remains manual.
 
 See `README.md` status table for latest progress.
