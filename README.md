@@ -30,13 +30,16 @@ Source CSVs (customers, orders, products)
 | Phase | Status |
 |-------|--------|
 | Requirements analysis | Complete |
-| Repository structure | Aligned to assessment template |
-| Data generation | Script ready (`src/data_generation/`) |
-| Bronze layer | Placeholder modules |
-| Silver layer | Placeholder modules |
-| Gold layer | Placeholder SQL/modules |
-| Dashboard | Placeholder queries |
-| Tests | Data generation tests |
+| Repository structure | Complete |
+| Data generation | Complete (`src/data_generation/`) |
+| Bronze layer | Complete (`src/bronze/`) |
+| Silver layer | Complete (`src/silver/`) |
+| Gold layer | Complete (`src/gold/`) |
+| End-to-end pipeline | Complete (`src/pipeline/run_all.py`) |
+| Databricks Asset Bundle | Complete (`databricks.yml`, `BUNDLE.md`) |
+| Dashboard SQL queries | Complete (`src/dashboard/dashboard_queries.sql`) |
+| Automated tests | Complete — 40 passed, 1 skipped |
+| Databricks deploy / E2E / Dashboard UI | **Pending** — workspace authentication unavailable |
 
 ## Repository Structure
 
@@ -81,9 +84,13 @@ python src/data_generation/generate_sample_data.py
 # 3. Run tests
 pytest tests/ -v
 
-# 4. Run database setup in Databricks
-#    See database/schema.sql
+# 4. Databricks setup and pipeline (when workspace access is available)
+#    See database/schema_community_edition.sql and BUNDLE.md
 ```
+
+## Databricks Deployment
+
+Bundle configuration is in `databricks.yml`. Local tests pass; actual Databricks deployment, end-to-end job execution, and SQL Dashboard UI creation remain **pending** because workspace authentication is currently unavailable. See `BUNDLE.md` and `src/dashboard/DASHBOARD_GUIDE.md`.
 
 ## Documentation Index
 

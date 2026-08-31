@@ -95,3 +95,31 @@ Readiness check passed on bundle files. Auth blocked: only profile `dev` exists 
 Final review: all changes limited to Bundle, packaging, tests, docs, `.gitignore`, and prompt history. No Bronze/Silver/Gold business-logic changes. Tests: 20 passed. Wheel build succeeded. Bundle static validation passed locally; Databricks deploy/E2E documented as pending due to CLI auth blocker. Committed and pushed to `cursor/phase2-silver-gold`.
 
 **YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 8: Final assessment-completeness pass (2026-08-31)
+
+**PROMPT SENT:**
+
+> We are doing the final assessment-completeness pass. Do NOT revisit Bronze, Silver, Gold, pipeline, or Bundle implementation. Create a separate branch. Complete dashboard SQL (Top 10 products bar, customer revenue histogram, customer segmentation pie) from Gold tables. Complete `candidate-info.md` and update README status. Run pytest. Commit `Complete dashboard artifacts and assessment documentation`. Document Databricks E2E/dashboard UI as pending. Do not falsely mark dashboard as deployed.
+
+**AI RESPONSE SUMMARY:**
+
+Branch `cursor/assessment-completion`. Dashboard SQL and guide completed. `candidate-info.md` and README status table updated. Full pytest: 40 passed, 1 skipped. Databricks deployment/dashboard UI documented as pending due to workspace auth.
+
+**YOUR EVALUATION:** _Pending_
+
+---
+
+## Prompt 9: Commit only, no push (2026-08-31)
+
+**PROMPT SENT:**
+
+> Don't push the changes, just commit them. I'll review the candidate information myself. Also add all the prompts that I have shared with you in the respective folder.
+
+**AI RESPONSE SUMMARY:**
+
+Backfilled missing prompt history (Silver/Gold branch, Git checkpoint, assessment pass). Committed assessment-completion changes locally without push. User to review `candidate-info.md` before any push.
+
+**YOUR EVALUATION:** _Pending_
